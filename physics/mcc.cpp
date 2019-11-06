@@ -834,7 +834,9 @@ void MCCPackage::ionElastic(CrossSection& cx)
   Scalar up1, up2, up3, mag;
   Scalar r11, r12, r13, r21, r22, r23, r31, r32, r33;
 			
-  Scalar coschi= sqrt(frand());
+//  Scalar coschi= sqrt(frand());
+  Scalar chi1 = pow(0.02578/(1.1114-frand()),2.);
+  Scalar coschi = cos(chi1);
   Scalar sinchi = sqrt(1. -coschi*coschi);
 	
   Scalar phi1  = TWOPI*frand();
@@ -861,9 +863,12 @@ void MCCPackage::ionElastic(CrossSection& cx)
   r21 = r32*r13 -r12*r33;
   r31 = r12*r23 -r22*r13;
 	
-  u.set_e1(v*coschi*(r11*sinchi*cosphi +r12*sinchi*sinphi +r13*coschi));
-  u.set_e2(v*coschi*(r21*sinchi*cosphi +r22*sinchi*sinphi +r23*coschi)); 
-  u.set_e3(v*coschi*(r31*sinchi*cosphi +r32*sinchi*sinphi +r33*coschi));
+//  u.set_e1(v*coschi*(r11*sinchi*cosphi +r12*sinchi*sinphi +r13*coschi));
+//  u.set_e2(v*coschi*(r21*sinchi*cosphi +r22*sinchi*sinphi +r23*coschi)); 
+//  u.set_e3(v*coschi*(r31*sinchi*cosphi +r32*sinchi*sinphi +r33*coschi));
+  u.set_e1(v*(r11*sinchi*cosphi +r12*sinchi*sinphi +r13*coschi));
+  u.set_e2(v*(r21*sinchi*cosphi +r22*sinchi*sinphi +r23*coschi)); 
+  u.set_e3(v*(r31*sinchi*cosphi +r32*sinchi*sinphi +r33*coschi));
 }
 
 void MCCPackage::chargeExchange(CrossSection& cx)
@@ -1314,8 +1319,9 @@ Scalar ArMCC::sigmaCX(Scalar energy)
 }
 Scalar ArMCC::sigmaIelastic(Scalar energy)
 {
-  if(energy > 4.0) return(1.8e-19 +4.0e-19/sqrt(energy));
-  return(-2.0e-19*sqrt(energy) +7.8e-19);
+//  if(energy > 4.0) return(1.8e-19 +4.0e-19/sqrt(energy));
+//  return(-2.0e-19*sqrt(energy) +7.8e-19);
+  return(2.329e-16/sqrt(energy));
 }
 
 
