@@ -1,0 +1,148 @@
+dcdis.inp
+{
+  rf discharge in argon
+}
+Variables
+{
+  DENSITY = 1.0E15 //m^-3
+  SEC_COEffI = 0.2 //secondary electron rate
+  PRESSURE = 60E-3 //mTorr
+  TIMESTEP = 1.0E-11 //second
+  FREQ = 13.56E6 //Hz
+  VOL = 500 //V
+}
+
+Region
+{
+  Species
+  {
+    name = electrons
+    m = 9.11E-31
+    q = -1.6E-19
+    collisionModel=1
+  }
+  Species
+  {
+    name = argon
+    m = 6.67e-26
+    q = 1.6E-19
+    subcycle = 1 //100
+    collisionModel=2
+  }
+Grid
+{
+	J = 30
+	x1s = 0.0
+	x1f = 0.05
+	n1 = 1.0
+	K = 30
+	x2s = 0.0
+	x2f = 0.01
+	n2 = 1.0
+}
+Control
+{
+	dt = TIMESTEP
+	ElectrostaticFlag = 1 // 1=electrostatic
+}
+MCC
+{
+	gas = Ar
+	pressure = PRESSURE
+	eSpecies = electrons
+	iSpecies = argon
+}
+Conductor // Left boundary
+{
+  name = Conductor
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 30
+	normal = 1
+	Secondary
+	{
+		secondary = SEC_COEffI
+		secSpecies = electrons
+		iSpecies = argon
+	}
+	//nxbins=30
+	//nthetabins = 90
+}
+
+Equipotential // Right boundary
+{
+  name = Equipotential
+	//C = VOL
+	A = VOL
+	phase = 0
+	frequency = FREQ
+	j1 = 30
+	j2 = 30
+	k1 = 0
+	k2 = 30
+	normal = -1
+	Secondary
+	{
+		secondary = SEC_COEffI
+		secSpecies = electrons
+		iSpecies = argon
+	}
+  nxbins=30
+	nthetabins = 200
+	theta_max = 20
+	nenergybins= 30
+	energy_min = 0
+	energy_max = 500
+
+}
+Dielectric
+{
+  name = Dielectric
+	er = 1.0
+	j1 = 0
+	j2 = 30
+	k1 = 30
+	k2 = 30
+  name = Dielectric
+  normal = -1
+	Secondary
+	{
+		secondary = SEC_COEffI
+		secSpecies = electrons
+		iSpecies = argon
+	}
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 30
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	x1MinMKS = 0.000
+	x1MaxMKS = 0.05
+	x2MinMKS = 0.00
+	x2MaxMKS = 0.01
+	speciesName = electrons
+	density = DENSITY
+	np2c = 1.0E6
+	LoadMethodFlag =1
+	temperature = 5.93e5
+}
+Load
+{
+	x1MinMKS = 0.00
+	x1MaxMKS = 0.05
+	x2MinMKS = 0.00
+	x2MaxMKS = 0.01
+	speciesName = argon
+	density = DENSITY
+	np2c = 1.0e6
+	LoadMethodFlag=1
+	temperature = 4.9e2
+}
+}
